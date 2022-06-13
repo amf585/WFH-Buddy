@@ -1,14 +1,21 @@
 import {useUser} from '@auth0/nextjs-auth0';
+import { Db } from 'mongodb';
 import type {NextPage} from 'next'
+import clientPromise from '../lib/mongodb'
 
-const Home: NextPage = () => {
+interface IDbConnection {
+  isConnected: boolean
+  result?: any
+}
+
+
+const Home: NextPage<IDbConnection> = ({isConnected, result}) => {
 
   const {user, error, isLoading} = useUser();
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>{error.message}</div>;
-
-  console.log('user: ', user);
+  
   
   return (
     <>
@@ -20,3 +27,20 @@ const Home: NextPage = () => {
 }
 
 export default Home
+
+export async function getServerSideProps() {
+  try {
+    const client = await clientPromise
+    const db: Db = client.db('wfh-buddy')
+    const test = await db.collection('status').findOne({user: 'andrewfagan88@gmail.com'});
+  
+    return {
+      props: {isConnected: true, result: JSON.parse(JSON.stringify(test))},
+    }
+  } catch (e) {
+    console.error(e)
+    return {
+      props: {isConnected: false},
+    }
+  }
+}
