@@ -1,5 +1,3 @@
-import { GetServerSidePropsContext } from "next"
-
 /**
  * General utility functions
  */

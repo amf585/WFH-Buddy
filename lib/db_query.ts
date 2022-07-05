@@ -2,27 +2,72 @@ import { Db, ObjectId } from "mongodb"
 import clientPromise from "./mongodb"
 
 /**
- * Database query utility functions 
+ * Database query utilities 
  */
 
-export interface IStatusData {
+
+//// Interfaces
+
+export interface IStatus {
     edit?: boolean
     isConnected?: boolean
     message?: string
-    result?: any
+    data?: any
 }
 
-export const getStatusData = async (idStr: string) => {
+export interface IStatusData {
+    status: string
+    color: string
+    music: boolean
+    meeting: boolean
+    call: boolean
+    lastUpdate: Date
+}
+
+//// Private Functions
+
+// Make Database connection
+const connectToDb = async (): Promise<Db> => {
+    const client = await clientPromise;
+    const db: Db = client.db('wfh-buddy');
+
+    return db;
+}
+
+//// Public Functions
+
+// Get Status by ID
+export const getStatusById = async (statusId: string): Promise<IStatus> => {
 
     try {
-        const client = await clientPromise
-        const db: Db = client.db('wfh-buddy')
-        const status = await db.collection('status').findOne({_id: new ObjectId(idStr)});
+        const db = await connectToDb();
+        const status = await db.collection('status').findOne({_id: new ObjectId(statusId)});
 
         return {
             isConnected: true, 
-            result: JSON.parse(JSON.stringify(status))
+            data: JSON.parse(JSON.stringify(status))
         }
+
+    } catch (e: any) {
+
+        return {
+            isConnected: false, 
+            message: e.message
+        }
+    }
+}
+
+// Update status by ID
+export const updateStatusById = async (statusId: string, newStatus: IStatusData) => {
+
+    try {
+
+        const db = await connectToDb();
+
+        // TODO - add update statement here and test
+        // Will need to pass function from parent to child for socket emit when form submitted
+
+        const status = await db.collection('status').findOneAndReplace({_id: new ObjectId(statusId)}, newStatus);
 
     } catch (e: any) {
 

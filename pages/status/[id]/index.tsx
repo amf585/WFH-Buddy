@@ -4,12 +4,12 @@ import { ChangeEvent, useEffect, useState } from 'react'
 import io, { Socket } from 'Socket.IO-client'
 import Link from 'next/link';
 import { nameToId } from '../../../lib/util';
-import { getStatusData, IStatusData } from '../../../lib/db_query';
+import { getStatusById, IStatus } from '../../../lib/db_query';
 import { EditStatus } from '../../../components/edit-status';
 
 let socket: Socket;
 
-const Status: NextPage<IStatusData> = ({edit = false, isConnected, message, result}) => { 
+const Status: NextPage<IStatus> = ({edit = false, isConnected, message, data}) => { 
   
   const [input, setInput] = useState('');
   const {user, error, isLoading} = useUser();
@@ -52,7 +52,7 @@ const Status: NextPage<IStatusData> = ({edit = false, isConnected, message, resu
       <Link href="/api/auth/logout">Logout</Link>
 
       <pre>
-        {result}
+        {JSON.stringify(data)}
       </pre>
     </> 
   )
@@ -68,10 +68,10 @@ export const getServerSideProps = withPageAuthRequired({
     const session: Session | null | undefined = getSession(ctx.req, ctx.res);
     const name: string = ctx.params?.id?.toString().toLowerCase() || ''
     const statusId: string = nameToId(name.toLowerCase())
-    const statusData = await getStatusData(statusId)
+    const statusData = await getStatusById(statusId)
 
     // Allow user to edit their own status
-    if (session?.user?.email === statusData.result.email) {
+    if (session?.user?.email === statusData.data.email) {
       return {
         props:{edit: true, ...statusData}
       }
