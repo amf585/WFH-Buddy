@@ -1,29 +1,84 @@
+import axios from "axios"
+import { NextApiRequest } from "next"
 import Link from "next/link"
+import React from "react"
+import { FormEvent } from "react"
+import { IStatusData } from "../lib/db_query"
+import { updateStatusById } from "../lib/util"
 
-export const EditStatus: React.FunctionComponent = () => {
+
+// TODO pass in status to set initial values for form
+
+interface IEditStatusProps {
+  statusData?: IStatusData
+  callback: () => void
+}
+
+export const EditStatus: React.FunctionComponent<IEditStatusProps> = ({statusData, callback}) => {
+
+  const [mood, setMood] = React.useState('')
+  const [color, setColor] = React.useState('')
+  const [callAvailability, setCallAvailability] = React.useState('')
+  const [meeting, setMeeting] = React.useState(false)
+  const [music, setMusic] = React.useState(false)
+
+  const handleFormSubmit = async (event: FormEvent): Promise<void> => {
+
+    event.preventDefault()
+
+    const newStatus: IStatusData = {
+      email: statusData?.email,
+      mood,
+      color,
+      callAvailability,
+      meeting,
+      music,
+      lastUpdate: Date.now().toString()
+    }
+
+    const didUpdate = await updateStatusById(statusData?._id, newStatus)
+
+    if (didUpdate) {
+      callback()
+    }
+  }
+ 
   return (
     <>
-     <form>
+     <form onSubmit={handleFormSubmit}>
       <div className="mb-3">
-        <select className="form-select" aria-label="Mood select input">
-          <option selected>How are you feeling?</option>
-          <option value="Angry">Three</option>
-          <option value="Happy">Happy</option>
-          <option value="Neutral">Neutral</option>
-          <option value="Sad">Sad</option>
+        <label>Mood</label>
+        <select 
+          className="form-select" 
+          aria-label="Mood select input" 
+          value={mood}
+          onChange={(e) => setMood(e.target.value)}>
+          <option value="happy">Happy</option>
+          <option value="neutral">Neutral</option>
+          <option value="sad">Sad</option>
+          <option value="angry">Angry</option>
         </select>
       </div>
       <div className="mb-3">
-        <select className="form-select" aria-label="Stoplight color">
-          <option selected>Light Color</option>
-          <option value="Red">Red</option>
-          <option value="Yellow">Yellow</option>
-          <option value="Gree">Green</option>
+        <label>Light Color</label>
+        <select 
+          className="form-select" 
+          aria-label="Stoplight color"
+          value={color}
+          onChange={(e) => setColor(e.target.value)}>
+          <option value="siren">Fire Siren</option>
+          <option value="red">Red</option>
+          <option value="yellow">Yellow</option>
+          <option value="green">Green</option>
         </select>
       </div>
       <div className="mb-3">
-        <select className="form-select" aria-label="Call availability">
-          <option selected>Call Availability</option>
+        <label>Call Availability</label>
+        <select 
+          className="form-select" 
+          aria-label="Call availability"
+          value={callAvailability}
+          onChange={(e) => setCallAvailability(e.target.value)}>
           <option value="anytime">Call Anytime</option>
           <option value="ask">Ask First</option>
           <option value="none">Emergency Only</option>
@@ -31,14 +86,24 @@ export const EditStatus: React.FunctionComponent = () => {
       </div>
       <div className="mb-3">
         <div className="form-check form-switch">
-          <input className="form-check-input" type="checkbox" id="flexSwitchCheckDefault"/>
-          <label className="form-check-label" htmlFor="flexSwitchCheckDefault">Meeting</label>
+          <input 
+            className="form-check-input" 
+            type="checkbox" 
+            id="meetingSwitch"
+            checked={meeting}
+            onChange={(e) => setMeeting(!meeting)}/>
+          <label className="form-check-label" htmlFor="meetingSwitch">Meeting</label>
         </div>
       </div>
       <div className="mb-3">
         <div className="form-check form-switch">
-          <input className="form-check-input" type="checkbox" id="flexSwitchCheckDefault"/>
-          <label className="form-check-label" htmlFor="flexSwitchCheckDefault">Music</label>
+          <input 
+            className="form-check-input"
+            type="checkbox" 
+            id="musicSwitch"
+            checked={music}
+            onChange={(e) => setMusic(!music)}/>
+          <label className="form-check-label" htmlFor="musicSwitch">Music</label>
         </div>
       </div>
       <button type="submit" className="btn btn-primary">Update</button>

@@ -12,16 +12,18 @@ export interface IStatus {
     edit?: boolean
     isConnected?: boolean
     message?: string
-    data?: any
+    data?: IStatusData
 }
 
 export interface IStatusData {
-    status: string
+    _id?: string
+    email?: string
+    mood: string
     color: string
     music: boolean
     meeting: boolean
-    call: boolean
-    lastUpdate: Date
+    callAvailability: string
+    lastUpdate: string
 }
 
 //// Private Functions
@@ -37,7 +39,7 @@ const connectToDb = async (): Promise<Db> => {
 //// Public Functions
 
 // Get Status by ID
-export const getStatusById = async (statusId: string): Promise<IStatus> => {
+export const getStatusByIdDb = async (statusId: string): Promise<IStatus> => {
 
     try {
         const db = await connectToDb();
@@ -58,22 +60,16 @@ export const getStatusById = async (statusId: string): Promise<IStatus> => {
 }
 
 // Update status by ID
-export const updateStatusById = async (statusId: string, newStatus: IStatusData) => {
+export const updateStatusByIdDb = async (statusId: string, newStatus: IStatusData): Promise<Boolean> => {
 
     try {
-
         const db = await connectToDb();
-
-        // TODO - add update statement here and test
-        // Will need to pass function from parent to child for socket emit when form submitted
-
         const status = await db.collection('status').findOneAndReplace({_id: new ObjectId(statusId)}, newStatus);
+
+        return status ? true : false;
 
     } catch (e: any) {
 
-        return {
-            isConnected: false, 
-            message: e.message
-        }
+        return false;
     }
 }
