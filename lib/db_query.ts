@@ -12,7 +12,7 @@ export interface IStatus {
     edit?: boolean
     isConnected?: boolean
     message?: string
-    data?: IStatusData
+    data: IStatusData
 }
 
 export interface IStatusData {
@@ -39,7 +39,7 @@ const connectToDb = async (): Promise<Db> => {
 //// Public Functions
 
 // Get Status by ID
-export const getStatusByIdDb = async (statusId: string): Promise<IStatus> => {
+export const getStatusByIdDb = async (statusId: string): Promise<IStatus | null> => {
 
     try {
         const db = await connectToDb();
@@ -51,11 +51,7 @@ export const getStatusByIdDb = async (statusId: string): Promise<IStatus> => {
         }
 
     } catch (e: any) {
-
-        return {
-            isConnected: false, 
-            message: e.message
-        }
+        return null
     }
 }
 

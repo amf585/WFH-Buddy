@@ -1,6 +1,3 @@
-import axios from "axios"
-import { NextApiRequest } from "next"
-import Link from "next/link"
 import React from "react"
 import { FormEvent } from "react"
 import { IStatusData } from "../lib/db_query"
@@ -16,14 +13,13 @@ interface IEditStatusProps {
 
 export const EditStatus: React.FunctionComponent<IEditStatusProps> = ({statusData, callback}) => {
 
-  const [mood, setMood] = React.useState('')
-  const [color, setColor] = React.useState('')
-  const [callAvailability, setCallAvailability] = React.useState('')
-  const [meeting, setMeeting] = React.useState(false)
-  const [music, setMusic] = React.useState(false)
+  const [mood, setMood] = React.useState(statusData?.mood || '')
+  const [color, setColor] = React.useState(statusData?.color || '')
+  const [callAvailability, setCallAvailability] = React.useState(statusData?.callAvailability || '')
+  const [meeting, setMeeting] = React.useState(statusData?.meeting || false)
+  const [music, setMusic] = React.useState(statusData?.music || false)
 
   const handleFormSubmit = async (event: FormEvent): Promise<void> => {
-
     event.preventDefault()
 
     const newStatus: IStatusData = {

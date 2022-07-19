@@ -1,0 +1,17 @@
+.status-content {
+    i.bi {
+        display: inline-block;
+        margin-right: 5px;
+        width: 35px;
+    }
+
+    .mood-container {
+        box-shadow: 0px 0px 2px -2px rgba(0,0,0,0.75);
+    }
+
+    .status-row {
+        border: 0.5px solid black;
+        box-shadow: 0px 0px 4px -2px rgba(0,0,0,0.75);
+        font-size: 1.7rem;
+    }
+}
