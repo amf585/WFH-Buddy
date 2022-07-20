@@ -8,6 +8,7 @@ import { getStatusByIdDb, IStatus } from '../../../lib/db_query'
 import { EditStatus } from '../../../components/edit-status'
 import type { GetServerSidePropsContext, NextPage } from 'next'
 import classnames from 'classnames'
+import { StatusItem } from '../../../components/status-item'
 
 let socket: Socket;
 
@@ -15,7 +16,6 @@ const Status: NextPage<IStatus> = ({edit = false, isConnected, data}) => {
   
   const [statusData, setStatusData] = useState(data)
   const { error, isLoading } = useUser();
-  const statusRowClasses: string = 'status-row my-3 p-3 d-flex justify-content-between rounded'
 
   useEffect(() => {
     // Scoped async function inside hook
@@ -70,34 +70,25 @@ const Status: NextPage<IStatus> = ({edit = false, isConnected, data}) => {
           </div>
 
           <div className="p-3">
-            <div className={classnames(statusRowClasses)}>
-                <div>
-                  <i className="bi bi-telephone"></i>Call
-                </div>
-                <div>
-                  {availabilityToDisplayText(statusData.callAvailability)}
-                </div>
-            </div>
-
-            <div className={classnames(statusRowClasses)}>
-                <div>
-                  <i className="bi bi-calendar-event"></i>In Meeting
-                </div>
-                <div>
-                  {boolToDisplayText(statusData.meeting)}
-                </div>
-            </div>
-
-            <div className={classnames(statusRowClasses)}>
-                <div>
-                  <i className="bi bi-headphones"></i>Headphones
-                </div>
-                <div>
-                  {boolToDisplayText(statusData.music)}
-                </div>
-            </div>
+            <StatusItem 
+              accentValue={false} 
+              displayValue={availabilityToDisplayText(statusData.callAvailability)}
+              iconClass="bi-telephone"
+              label="Call"
+            />
+            <StatusItem 
+              accentValue={statusData.meeting} 
+              displayValue={boolToDisplayText(statusData.meeting)}
+              iconClass="bi-calendar-event"
+              label="In Meeting"
+            />
+            <StatusItem 
+              accentValue={statusData.music} 
+              displayValue={boolToDisplayText(statusData.music)}
+              iconClass="bi-headphones"
+              label="Headphones"
+            />
           </div>
-
         </section>
       </div>
     </div> 

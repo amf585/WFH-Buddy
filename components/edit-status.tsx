@@ -1,10 +1,7 @@
-import React from "react"
+import React, { useState } from "react"
 import { FormEvent } from "react"
 import { IStatusData } from "../lib/db_query"
 import { updateStatusById } from "../lib/util"
-
-
-// TODO pass in status to set initial values for form
 
 interface IEditStatusProps {
   statusData?: IStatusData
@@ -13,12 +10,14 @@ interface IEditStatusProps {
 
 export const EditStatus: React.FunctionComponent<IEditStatusProps> = ({statusData, callback}) => {
 
-  const [mood, setMood] = React.useState(statusData?.mood || '')
-  const [color, setColor] = React.useState(statusData?.color || '')
-  const [callAvailability, setCallAvailability] = React.useState(statusData?.callAvailability || '')
-  const [meeting, setMeeting] = React.useState(statusData?.meeting || false)
-  const [music, setMusic] = React.useState(statusData?.music || false)
+  const [formDirty, setFormDirty] = useState(false)
+  const [mood, setMood] = useState(statusData?.mood || '')
+  const [color, setColor] = useState(statusData?.color || '')
+  const [callAvailability, setCallAvailability] = useState(statusData?.callAvailability || '')
+  const [meeting, setMeeting] = useState(statusData?.meeting || false)
+  const [music, setMusic] = useState(statusData?.music || false)
 
+  // Handle status form submit
   const handleFormSubmit = async (event: FormEvent): Promise<void> => {
     event.preventDefault()
 
@@ -32,16 +31,18 @@ export const EditStatus: React.FunctionComponent<IEditStatusProps> = ({statusDat
       lastUpdate: Date.now().toString()
     }
 
+    // Try to update in DB, if successful, broadcast status update event
     const didUpdate = await updateStatusById(statusData?._id, newStatus)
 
     if (didUpdate) {
+      setFormDirty(false)
       callback()
     }
   }
  
   return (
     <>
-     <form onSubmit={handleFormSubmit}>
+     <form onSubmit={handleFormSubmit} onChange={() => setFormDirty(true)}>
       <div className="mb-3">
         <label>Mood</label>
         <select 
@@ -102,7 +103,7 @@ export const EditStatus: React.FunctionComponent<IEditStatusProps> = ({statusDat
           <label className="form-check-label" htmlFor="musicSwitch">Music</label>
         </div>
       </div>
-      <button type="submit" className="btn btn-primary">Update</button>
+      <button disabled={!formDirty} type="submit" className="btn btn-primary">Update</button>
     </form>
     </> 
   )
