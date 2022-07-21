@@ -1,7 +1,6 @@
 import React from 'react'
 import { getSession, Session, useUser, withPageAuthRequired } from '@auth0/nextjs-auth0'
 import { useEffect, useState } from 'react'
-import io, { Socket } from 'Socket.IO-client'
 import Link from 'next/link'
 import { boolToDisplayText, timestampToDisplayText, getStatusById, nameToId, generateMoodBannerClasses, availabilityToDisplayText } from '../../../lib/util'
 import { getStatusByIdDb, IStatus } from '../../../lib/db_query'
@@ -9,6 +8,8 @@ import { EditStatus } from '../../../components/edit-status'
 import type { GetServerSidePropsContext, NextPage } from 'next'
 import classnames from 'classnames'
 import { StatusItem } from '../../../components/status-item'
+import { Socket } from 'socket.io'
+import { io } from 'socket.io-client'
 
 let socket: Socket;
 
