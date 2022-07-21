@@ -9,9 +9,6 @@ interface IStatusItem {
 
 export const StatusItem: React.FunctionComponent<IStatusItem> = ({accentValue, displayValue, iconClass, label}) => {
 
-    console.log();
-    
-    
     return (
         <div className="status-row my-4 p-3 d-flex justify-content-between rounded">
             <div>
