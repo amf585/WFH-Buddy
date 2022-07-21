@@ -42,7 +42,7 @@ export const EditStatus: React.FunctionComponent<IEditStatusProps> = ({statusDat
  
   return (
     <>
-     <form onSubmit={handleFormSubmit} onChange={() => setFormDirty(true)}>
+     <form className="p-5" onSubmit={handleFormSubmit} onChange={() => setFormDirty(true)}>
       <div className="mb-3">
         <label>Mood</label>
         <select 
