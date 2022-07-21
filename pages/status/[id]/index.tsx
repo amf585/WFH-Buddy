@@ -13,6 +13,8 @@ import { io } from 'socket.io-client'
 let socket: any;
 
 const Status: NextPage<IStatus> = ({edit = false, isConnected, data}) => { 
+
+  console.log('DATA: ', data);
   
   const [statusData, setStatusData] = useState(data)
   const { error, isLoading } = useUser();
