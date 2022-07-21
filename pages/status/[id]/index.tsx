@@ -8,10 +8,9 @@ import { EditStatus } from '../../../components/edit-status'
 import type { GetServerSidePropsContext, NextPage } from 'next'
 import classnames from 'classnames'
 import { StatusItem } from '../../../components/status-item'
-import { Socket } from 'socket.io'
 import { io } from 'socket.io-client'
 
-let socket: Socket;
+let socket: any;
 
 const Status: NextPage<IStatus> = ({edit = false, isConnected, data}) => { 
   
