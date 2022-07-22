@@ -2,8 +2,6 @@ import axios from "axios";
 import moment from "moment";
 import { IStatusData } from "./db_query";
 
-const BASE_URL = process.env.AUTH0_BASE_URL || 'http://localhost:3000'
-
 /**
  * General utilities
  */
@@ -64,7 +62,7 @@ export const generateMoodBannerClasses = (light: string): string => {
 // Get status by full ID
 export const getStatusById = async (id: string) => {
     try {
-        const res = await axios.get(`${BASE_URL}/api/status/getStatus/${id}`);
+        const res = await axios.get(`${process.env.BASE_URL}/api/status/getStatus/${id}`);
         return res.data
         
     } catch (e) {
@@ -82,7 +80,7 @@ export const updateStatusById = async (id: string | undefined, newStatus: IStatu
 
     try {
         const res = await axios.post(
-          `${BASE_URL}/api/status/updateStatus`,
+          `${process.env.BASE_URL}/api/status/updateStatus`,
           {
             id,
             newStatus
