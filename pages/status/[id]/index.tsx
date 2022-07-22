@@ -14,9 +14,6 @@ let socket: any;
 
 const Status: NextPage<IStatus> = ({edit = false, isConnected, data}) => { 
 
-  console.log(process.env.BASE_URL);
-  
-  
   const [statusData, setStatusData] = useState(data)
   const { error, isLoading } = useUser();
 
