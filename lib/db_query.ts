@@ -51,10 +51,6 @@ export const getStatusByIdDb = async (statusId: string): Promise<IStatus | null>
         }
 
     } catch (e: any) {
-
-        console.log('ERRORRRRR >>>>>>>>>>>', e);
-        
-
         return null
     }
 }
