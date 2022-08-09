@@ -54,6 +54,7 @@ export const EditStatus: React.FunctionComponent<IEditStatusProps> = ({statusDat
           <option value="neutral">Neutral</option>
           <option value="sad">Sad</option>
           <option value="angry">Angry</option>
+          <option value="stressed">Stressed</option>
         </select>
       </div>
       <div className="mb-3">
